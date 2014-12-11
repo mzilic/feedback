@@ -1,0 +1,22 @@
+{
+  "name": "feedback",
+  "main": "feedback.js",
+  "version": "1.0.0",
+  "homepage": "https://github.com/mzilic/feedback",
+  "authors": [
+    "Kázmér Rapavi"
+  ],
+  "keywords": [
+    "jquery",
+    "feedback"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
