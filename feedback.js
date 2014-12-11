@@ -36,7 +36,11 @@
 			onClose: 			function() {},
 			screenshotStroke:	true,
 			highlightElement:	true,
-			initialBox:			false
+			initialBox:			false,
+			beforeSend: function(args) {},
+			onPostHTMLShow: function(element, data){},
+			onPostURLShow: function(element, data){},
+			onPostBrowserInfoShow: function(element, data){}
     }, options);
 		var supportedBrowser = !!window.HTMLCanvasElement;
 		var isFeedbackButtonNative = settings.feedbackButton == '.feedback-btn';
@@ -152,16 +156,25 @@
 					$.each(navigator.plugins, function(i) {
 						post.browser.plugins.push(navigator.plugins[i].name);
 					});
+					if (settings.onPostBrowserInfoShow){
+						settings.onPostBrowserInfoShow($('#feedback-browser-info'), post.browser);
+					}
 					$('#feedback-browser-info').show();
 				}
 				
 				if (settings.postURL) {
 					post.url = document.URL;
+					if (settings.onPostURLShow){
+						settings.onPostURLShow($('#feedback-page-info'), post.url);
+					}
 					$('#feedback-page-info').show();
 				}
 					
 				if (settings.postHTML) {
-					post.html = $('html').html();
+					post.html = $('html').html();					
+					if (settings.onPostHTMLShow){
+						settings.onPostHTMLShow($('#feedback-page-structure'), post.html);
+					}
 					$('#feedback-page-structure').show();
 				}
 				
@@ -511,13 +524,26 @@
 						
 						post.img = img;
 						post.note = $('#feedback-note').val();
+						
+						var postData = JSON.stringify(post);
+						if (settings.beforeSend){
+							var args = {
+								data : postData,
+								cancel: false
+							};
+							settings.beforeSend(args);
+							if (args.cancel){
+								close();
+								return;
+							}
+						}						
 
 						$.ajax({
 							url: settings.ajaxURL,
 							contentType: 'application/json',
 							dataType: 'json',
 							type: 'POST',
-							data: JSON.stringify(post),
+							data: postData,
 							success: function() {
 								$('#feedback-module').append(settings.tpl.submitSuccess);
 							},
