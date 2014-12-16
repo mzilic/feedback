@@ -40,7 +40,8 @@
 			beforeSend: function(args) {},
 			onPostHTMLShow: function(element, data){},
 			onPostURLShow: function(element, data){},
-			onPostBrowserInfoShow: function(element, data){}
+			onPostBrowserInfoShow: function(element, data){},
+			beforeSendValidate: function(isValid){ return true;}
     }, options);
 		var supportedBrowser = !!window.HTMLCanvasElement;
 		var isFeedbackButtonNative = settings.feedbackButton == '.feedback-btn';
@@ -518,6 +519,13 @@
 				$(document).on('click', '#feedback-submit', function() {
 					canDraw = false; 
 
+					if (settings.beforeSendValidate){
+						var isValid = $('#feedback-note').val().length > 0;
+						if (!settings.beforeSendValidate(isValid)){
+							$('#feedback-overview-error').show();
+							return;
+						}
+					}
 					if ($('#feedback-note').val().length > 0) {
 						$('#feedback-submit-success,#feedback-submit-error').remove();
 						$('#feedback-overview').hide();
