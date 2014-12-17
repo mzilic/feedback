@@ -532,8 +532,8 @@
 						
 						post.img = img;
 						post.note = $('#feedback-note').val();
-						
-						var postData = JSON.stringify(post);
+
+						var postData = post
 						if (settings.beforeSend){
 							var args = {
 								data : postData,
@@ -544,14 +544,14 @@
 								close();
 								return;
 							}
-						}						
+						}
 
 						$.ajax({
 							url: settings.ajaxURL,
 							contentType: 'application/json',
 							dataType: 'json',
 							type: 'POST',
-							data: postData,
+							data: JSON.stringify(post),
 							success: function() {
 								$('#feedback-module').append(settings.tpl.submitSuccess);
 							},
